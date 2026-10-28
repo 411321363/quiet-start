@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>QuietStart — Gentle Task & Micro-Step Companion</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-shell">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-wrapper">
+        <h1 class="brand-title">QuietStart</h1>
+        <p class="brand-tagline">Take things one tiny step at a time.</p>
+      </div>
+      <div class="header-actions">
+        <button id="calendar-btn" class="icon-btn" aria-label="Open Calendar & Repeat Past Days" title="Calendar & Repeat Days">
+          <!-- Calm Calendar Icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </button>
+        <button id="settings-btn" class="icon-btn" aria-label="Open Settings" title="Settings">
+          <!-- Calm Gear Icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Quick Add Feature: Zero Friction (Type and press Enter) -->
+    <section class="quick-add-section" aria-label="Quick Add Task">
+      <form id="quick-add-form" class="quick-add-form">
+        <input 
+          type="text" 
+          id="quick-add-input" 
+          class="quick-add-input" 
+          placeholder="What's on your mind? Type and press Enter..." 
+          autocomplete="off"
+          autofocus
+        />
+        <button type="submit" class="quick-add-submit-btn" aria-label="Add Task">
+          <!-- Arrow Up Icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </button>
+      </form>
+      <div class="quick-add-hint">No categories or tags required. Just type and press Enter.</div>
+    </section>
+
+    <!-- Active Tasks Section -->
+    <main>
+      <div class="section-header">
+        <h2 class="section-title">Today's Gentle Space</h2>
+        <span id="active-task-counter" class="section-counter">0 active tasks</span>
+      </div>
+
+      <ul id="task-list-container" class="task-list">
+        <!-- Injected dynamically by app.js -->
+      </ul>
+    </main>
+  </div>
+
+  <!-- "Just Start" Zen Mode Overlay -->
+  <div id="just-start-overlay" class="just-start-overlay" role="dialog" aria-modal="true" aria-labelledby="zen-step-text">
+    <div class="just-start-box">
+      <button id="zen-close-btn" class="zen-close-btn" aria-label="Close focus mode">✕</button>
+
+      <!-- Active Step View -->
+      <div id="zen-active-view" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <span class="zen-badge">Just Start — Single Step Focus</span>
+        <div id="zen-shield-indicator" class="zen-shield-indicator" title="QuietStart will kindly check in if you drift away">
+          🛡️ Anti-drift check active
+        </div>
+        <div id="zen-counter" class="zen-step-counter">Step 1 of 5</div>
+        <div id="zen-step-text" class="zen-step-text">Open your document...</div>
+
+        <!-- 5-Minute Gentle Timer -->
+        <div class="zen-timer-wrap">
+          <div id="zen-clock" class="zen-timer-clock">05:00</div>
+          <div class="zen-timer-controls">
+            <button id="zen-timer-toggle" class="timer-sub-btn">Start</button>
+            <button id="zen-timer-reset" class="timer-sub-btn">Reset (5m)</button>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="zen-actions">
+          <button id="zen-btn-skip" class="btn-skip">Skip for now</button>
+          <button id="zen-btn-done" class="btn-done">Done ✓</button>
+        </div>
+      </div>
+
+      <!-- Completion Celebration View -->
+      <div id="zen-complete-view" class="zen-complete-view">
+        <div class="zen-complete-icon">🌿</div>
+        <h3 class="zen-complete-title">You showed up and started!</h3>
+        <p class="zen-complete-sub">Every small step is real progress. You can stop here or keep going whenever you are ready.</p>
+        <button id="zen-finish-back-btn" class="btn-primary">Return to Tasks</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal Dialog -->
+  <div id="settings-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="settings-modal-title" class="modal-title">Settings & Preferences</h2>
+        <button id="settings-close-btn" class="modal-close-btn" aria-label="Close settings">✕</button>
+      </div>
+
+      <!-- LLM Configuration -->
+      <div class="setting-group">
+        <label for="setting-provider" class="setting-label">AI Breakdown Provider</label>
+        <p class="setting-description">Select which LLM to use when breaking tasks down. If empty, the app seamlessly uses built-in smart templates.</p>
+        <select id="setting-provider" class="setting-select">
+          <option value="openai">OpenAI / OpenAI-Compatible (Default)</option>
+          <option value="gemini">Google Gemini</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label for="setting-api-key" class="setting-label">API Key (Optional)</label>
+        <input 
+          type="password" 
+          id="setting-api-key" 
+          class="setting-input" 
+          placeholder="e.g. sk-... or AIzaSy..." 
+          autocomplete="off"
+        />
+        <div class="privacy-callout">
+          🔒 <strong>Privacy Assurance:</strong> Your API key is stored <em>only</em> in your local browser (<code>localStorage</code>). It is never sent to any developer server or saved in the code.
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <label for="setting-model" class="setting-label">Model Name</label>
+        <input 
+          type="text" 
+          id="setting-model" 
+          class="setting-input" 
+          placeholder="e.g. gpt-4o-mini or gemini-1.5-flash"
+        />
+      </div>
+
+      <div class="setting-group">
+        <label for="setting-endpoint" class="setting-label">Custom API Endpoint (Optional)</label>
+        <p class="setting-description">Useful for local models (e.g. Ollama/LocalAI) or custom API proxies.</p>
+        <input 
+          type="text" 
+          id="setting-endpoint" 
+          class="setting-input" 
+          placeholder="e.g. http://localhost:11434/v1/chat/completions"
+        />
+      </div>
+
+      <!-- Gentle Reminders Configuration -->
+      <div class="setting-group">
+        <label class="setting-label">Scheduled Gentle Reminders</label>
+        <p class="setting-description">Kind, pressure-free browser notifications to remind you to take a breath and try one small step.</p>
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; margin-bottom: 0.5rem;">
+          <input type="checkbox" id="setting-reminders-toggle" style="width: 18px; height: 18px; accent-color: var(--accent-sage);">
+          <span>Enable Scheduled Reminders</span>
+        </label>
+        
+        <label for="setting-reminder-times" class="setting-label" style="margin-top: 0.65rem;">Scheduled Times (24h format, comma separated)</label>
+        <input 
+          type="text" 
+          id="setting-reminder-times" 
+          class="setting-input" 
+          placeholder="09:30, 14:30, 19:30"
+        />
+      </div>
+
+      <!-- Sudden Reminders & Anti-Doomscroll Shield -->
+      <div class="setting-group">
+        <label class="setting-label">⚡ Sudden Reminders & Anti-Doomscroll Shield</label>
+        <p class="setting-description">Catches you kindly when you drift into social media or get stuck in a doomscrolling rabbit hole. Zero guilt—just a soft anchor back to reality.</p>
+        
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; margin-bottom: 0.65rem;">
+          <input type="checkbox" id="setting-doomscroll-toggle" style="width: 18px; height: 18px; accent-color: var(--accent-sage);">
+          <span>Enable Anti-Doomscroll Drift Detection</span>
+        </label>
+
+        <div id="doomscroll-options" style="margin-left: 1.5rem; display: flex; flex-direction: column; gap: 0.65rem;">
+          <div>
+            <label for="setting-drift-minutes" class="setting-label" style="font-size: 0.82rem;">Tab Drift Alert (If you leave this tab for):</label>
+            <select id="setting-drift-minutes" class="setting-select" style="margin-bottom: 0.25rem;">
+              <option value="3">3 minutes (Recommended for quick rabbit holes)</option>
+              <option value="5">5 minutes</option>
+              <option value="10">10 minutes</option>
+            </select>
+          </div>
+
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem;">
+            <input type="checkbox" id="setting-random-nudge-toggle" style="width: 16px; height: 16px; accent-color: var(--accent-sage);">
+            <span>Send sudden surprise grounding check-ins (every 8–15 mins)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="settings-cancel-btn" class="btn-secondary">Cancel</button>
+        <button id="settings-save-btn" class="btn-primary">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calendar & Repeat Days Modal Dialog -->
+  <div id="calendar-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="calendar-modal-title">
+    <div class="modal-box calendar-modal-box">
+      <div class="modal-header">
+        <div>
+          <h2 id="calendar-modal-title" class="modal-title">Gentle Calendar & Repeat</h2>
+          <p class="setting-description" style="margin-bottom: 0;">Look back at your quiet wins, or repeat any past day with one click.</p>
+        </div>
+        <button id="calendar-close-btn" class="modal-close-btn" aria-label="Close calendar">✕</button>
+      </div>
+
+      <!-- Month Navigation -->
+      <div class="cal-nav">
+        <button id="cal-prev-btn" class="icon-btn cal-nav-btn" aria-label="Previous Month">‹</button>
+        <span id="cal-month-title" class="cal-month-title">October 2026</span>
+        <button id="cal-next-btn" class="icon-btn cal-nav-btn" aria-label="Next Month">›</button>
+        <button id="cal-today-btn" class="action-pill-btn" style="margin-left: auto;">Go to Today</button>
+      </div>
+
+      <!-- Weekday Headers -->
+      <div class="cal-weekdays">
+        <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+      </div>
+
+      <!-- Day Cells Grid -->
+      <div id="cal-grid" class="cal-grid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+
+      <!-- Selected Day Details & Repeat Action -->
+      <div class="cal-selected-day-card">
+        <div class="cal-selected-header">
+          <div>
+            <h3 id="cal-selected-date-title" class="cal-selected-title">Tuesday, October 27</h3>
+            <span id="cal-selected-count" class="cal-selected-meta">0 tasks</span>
+          </div>
+          <button id="cal-repeat-day-btn" class="action-pill-btn primary" style="display: none;">
+            🔁 Repeat This Entire Day
+          </button>
+        </div>
+
+        <div id="cal-selected-tasks-list" class="cal-tasks-list">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notifications Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- JavaScript Modules -->
+  <script src="breakdown.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

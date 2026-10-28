@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuietStart — Task Breakdown Test Suite</title>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #2d3748;
+      --muted: #718096;
+      --border: #e2e8f0;
+      --pass: #2f855a;
+      --pass-bg: #f0fff4;
+      --fail: #c53030;
+      --fail-bg: #fff5f5;
+      --accent: #52796f;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      color: #1a202c;
+      margin-bottom: 0.35rem;
+    }
+    p.subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .summary-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .summary-stat {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--pass);
+    }
+    .summary-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .test-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .test-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .test-card.passed {
+      border-left: 5px solid var(--pass);
+    }
+    .test-card.failed {
+      border-left: 5px solid var(--fail);
+    }
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .test-title {
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-pass {
+      background: var(--pass-bg);
+      color: var(--pass);
+      border: 1px solid #c6f6d5;
+    }
+    .badge-fail {
+      background: var(--fail-bg);
+      color: var(--fail);
+      border: 1px solid #fed7d7;
+    }
+    .step-list {
+      margin-top: 0.75rem;
+      padding-left: 1.5rem;
+      font-size: 0.9rem;
+      color: #4a5568;
+    }
+    .step-list li {
+      margin-bottom: 0.35rem;
+    }
+    .verb-highlight {
+      font-weight: 600;
+      color: var(--accent);
+      background: #edf2f7;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+    }
+    .meta-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+    .nav-link {
+      display: inline-block;
+      margin-bottom: 1.25rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="index.html" class="nav-link">← Return to QuietStart App</a>
+    
+    <header>
+      <h1>Task Breakdown Engine — Verification Suite</h1>
+      <p class="subtitle">Verifies that all breakdowns produce 3–7 micro-steps, start with low-friction entries, and begin with concrete action verbs.</p>
+    </header>
+
+    <div class="summary-card" id="summary-card">
+      <div>
+        <div class="summary-label">Test Suite Status</div>
+        <div class="summary-stat" id="summary-status">Running tests...</div>
+      </div>
+      <div>
+        <div class="summary-label">Passing Rate</div>
+        <div class="summary-stat" id="summary-rate">—</div>
+      </div>
+    </div>
+
+    <div class="test-list" id="test-results-container">
+      <!-- Injected by test runner below -->
+    </div>
+  </div>
+
+  <script src="breakdown.js"></script>
+  <script src="tests.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const summary = runTests();
+      const container = document.getElementById('test-results-container');
+      const statusEl = document.getElementById('summary-status');
+      const rateEl = document.getElementById('summary-rate');
+
+      statusEl.textContent = `${summary.passed} of ${summary.total} Passed`;
+      rateEl.textContent = `${Math.round((summary.passed / summary.total) * 100)}%`;
+
+      container.innerHTML = summary.results.map(r => {
+        return `
+          <div class="test-card ${r.isPassed ? 'passed' : 'failed'}">
+            <div class="test-header">
+              <span class="test-title">#${r.testNum}: "${escapeHTML(r.taskTitle)}"</span>
+              <span class="badge ${r.isPassed ? 'badge-pass' : 'badge-fail'}">
+                ${r.isPassed ? 'PASS' : 'FAIL'}
+              </span>
+            </div>
+
+            <ol class="step-list">
+              ${r.steps.map(step => {
+                const words = step.split(' ');
+                const first = words[0];
+                const rest = words.slice(1).join(' ');
+                return `<li><span class="verb-highlight">${escapeHTML(first)}</span> ${escapeHTML(rest)}</li>`;
+              }).join('')}
+            </ol>
+
+            <div class="meta-tag">
+              ✓ ${r.stepCount} steps (target: 3–7) &nbsp;•&nbsp; 
+              ${r.isEasyStart ? '✓ Low-friction first step' : '⚠ Non-standard start'}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      function escapeHTML(str) {
+        if (!str) return '';
+        return str.replace(/[&<>'"]/g, tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag));
+      }
+    });
+  </script>
+</body>
+</html>
