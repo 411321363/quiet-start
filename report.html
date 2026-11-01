@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuietStart — Course Project Report (Introduction to AI)</title>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --text: #27302d;
+      --muted: #626e68;
+      --border: #e2e8e4;
+      --sage-dark: #2f4f4f;
+      --sage-main: #52796f;
+      --sage-subtle: #edf2ee;
+      --warm-accent: #d4a373;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 2.5rem 1rem 5rem 1rem;
+    }
+
+    .report-container {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--surface);
+      padding: 3.5rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toolbar a, .toolbar button {
+      background: var(--sage-main);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s;
+    }
+
+    .toolbar a:hover, .toolbar button:hover {
+      background: var(--sage-dark);
+    }
+
+    .toolbar .secondary-link {
+      background: var(--sage-subtle);
+      color: var(--sage-dark);
+    }
+
+    .toolbar .secondary-link:hover {
+      background: #d8e2dc;
+    }
+
+    .doc-meta {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--sage-main);
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--sage-dark);
+      line-height: 1.25;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .doc-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin-bottom: 1.75rem;
+    }
+
+    .disclaimer-card {
+      background: #f4f7f5;
+      border-left: 4px solid var(--sage-main);
+      padding: 1.15rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 2.5rem;
+      font-size: 0.92rem;
+    }
+
+    .disclaimer-card strong {
+      color: var(--sage-dark);
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--sage-dark);
+      margin-top: 2.25rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--sage-main);
+      margin-top: 1.25rem;
+      margin-bottom: 0.45rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    ul, ol {
+      margin-bottom: 1.25rem;
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.45rem;
+      font-size: 0.98rem;
+    }
+
+    strong {
+      color: #1e2624;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.88rem;
+    }
+
+    .data-table th, .data-table td {
+      padding: 0.75rem 0.85rem;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .data-table th {
+      background: var(--sage-subtle);
+      color: var(--sage-dark);
+      font-weight: 600;
+    }
+
+    .data-table tr:nth-child(even) {
+      background: #fafbf9;
+    }
+
+    .badge-pass {
+      background: #e6f4ea;
+      color: #137333;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.78rem;
+    }
+
+    .callout {
+      background: #fdfbf7;
+      border: 1px solid #fae6cb;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      font-size: 0.95rem;
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .report-container { box-shadow: none; border: none; padding: 0; }
+      .toolbar { display: none; }
+      h2 { page-break-after: avoid; }
+      .data-table { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="report-container">
+    <div class="toolbar">
+      <a href="index.html" class="secondary-link">← Return to QuietStart App</a>
+      <div style="display: flex; gap: 0.5rem;">
+        <a href="QuietStart_AI_Course_Report.docx" class="secondary-link" download>📥 Download Word (.docx)</a>
+        <button onclick="window.print()">🖨️ Print / Save as PDF</button>
+      </div>
+    </div>
+
+    <div class="doc-meta">Course Project Report • Introduction to AI</div>
+    <h1>QuietStart: An AI-Powered Low-Friction Micro-Step Assistant for Overcoming Task Paralysis and Executive Dysfunction</h1>
+    <div class="doc-sub">A Human-Centered Hybrid AI Architecture Combining Generative LLM Deconstruction with Heuristic Rule-Based Fallbacks • Date: November 2, 2026</div>
+
+    <div class="disclaimer-card">
+      <strong>Important Educational & Self-Help Notice:</strong>
+      QuietStart is an educational self-help tool created for an Introduction to AI university course. It is engineered solely to lower cognitive friction in task execution and is <strong>not</strong> medical, psychiatric, or clinical advice. It is not intended to diagnose, treat, prevent, or cure ADHD or any clinical psychiatric disorder.
+    </div>
+
+    <h2>1. What We Made (System Overview)</h2>
+    <p>
+      <strong>QuietStart</strong> is a calm, low-clutter, mobile-friendly web application built with vanilla HTML5, CSS3, and modern JavaScript (ES6+). It operates completely free of build tools, frameworks, and external server dependencies. The application directly addresses the psychological phenomenon of <em>task paralysis</em>—where the perceived ambiguity, scope, or dread of a multi-step obligation causes executive dysfunction, severe avoidance, and procrastination.
+    </p>
+    <p>Key functional capabilities include:</p>
+    <ul>
+      <li><strong>Zero-Friction Quick Add:</strong> Users capture tasks instantly by typing and pressing Enter. There are no mandatory categories, tags, priority matrices, or due dates that induce cognitive overhead.</li>
+      <li><strong>AI & Heuristic "Break It Down" Engine:</strong> Deconstructs any ambiguous task into 3 to 7 concrete micro-steps (2 to 5 minutes each). Every single step is programmatically guaranteed to start with a concrete imperative action verb (e.g., <em>Open, Pick, Read, Find</em>) and begins with an effortless entry step.</li>
+      <li><strong>"Just Start" Single-Step Focus Mode:</strong> Shields the user from total task overwhelm by displaying exactly ONE micro-step at a time inside a serene focus overlay, accompanied by a 5-minute countdown timer, gentle completion bell, and non-judgmental "Done" and "Skip for now" controls.</li>
+      <li><strong>Anti-Doomscroll Shield & Tab Drift Detection:</strong> Uses the browser Page Visibility API to detect when a user gets pulled into an attention-trapping social feed or background tab. If away for 3+ minutes, it sends a compassionate browser notification inviting them back without guilt.</li>
+      <li><strong>Gentle Calendar & Repeat Days:</strong> A quiet historical view where active days are highlighted with a soft sage dot, and rest days remain neutral with zero red strikes or broken-streak counters. Users can repeat any successful past routine into today's active workspace with a single click.</li>
+      <li><strong>Quiet Daily Rollover:</strong> Unfinished tasks roll over to the next day seamlessly without red 'OVERDUE' stamps, shame badges, or pressure.</li>
+    </ul>
+
+    <h2>2. Who It Is For (Target Audience & Cognitive Ergonomics)</h2>
+    <p>
+      Standard productivity tools (e.g., Jira, Asana, Todoist) are built around corporate tracking metrics: deadlines, priority badges, completion percentages, and red alert banners. While effective for project managers, these exact design patterns trigger emotional avoidance and shame spirals in neurodivergent individuals and stressed university students.
+    </p>
+    <p>QuietStart was designed specifically for:</p>
+    <ul>
+      <li><strong>University Students:</strong> Facing large, intimidating academic commitments (term research papers, comprehensive exams, programming assignments) that feel impossible to start.</li>
+      <li><strong>Individuals with ADHD or Executive Dysfunction:</strong> Who experience severe task inertia, working memory limits, and vulnerability to algorithmic dopamine traps (doomscrolling) when facing ambiguous work.</li>
+      <li><strong>Anyone Suffering Burnout or Overwhelm:</strong> Who needs a calm, forgiving space that values micro-momentum over rigid scheduling and eliminates streak-based guilt.</li>
+    </ul>
+
+    <h2>3. How We Made It With AI (Architecture & Prompt Engineering)</h2>
+    <p>
+      A central objective for this Introduction to AI course project was establishing a robust, ethical, and resilient AI architecture. Rather than relying on a naive API wrapper, QuietStart implements a hybrid system combining Generative Large Language Models with symbolic heuristic fallbacks and cognitive human-AI interaction patterns.
+    </p>
+
+    <h3>3.1 Hybrid AI Architecture & Graceful Degradation</h3>
+    <p>
+      Relying exclusively on cloud LLM APIs introduces critical vulnerabilities: latency, rate-limiting, network dropouts, and token costs. QuietStart uses a <strong>Graceful Degradation Pattern</strong>:
+    </p>
+    <ol>
+      <li><strong>Primary Path (Generative AI):</strong> If the user configures an API key in Settings (supporting OpenAI-compatible models such as GPT-4o-mini or Google Gemini 1.5 Flash), the app issues an asynchronous client-side fetch request with strict behavioral system instructions.</li>
+      <li><strong>Fallback Path (Symbolic Heuristic Engine):</strong> If the user has no API key, enters an invalid key, or loses internet connectivity, the app instantaneously routes execution to a built-in rule engine. This engine parses task keywords through regular expressions and synthesizes tailored micro-steps matching identical cognitive constraints.</li>
+    </ol>
+    <div class="callout">
+      <strong>Core Engineering Principle:</strong> The system delivers 100% operational availability under all conditions, embodying the principle that AI should enhance reliability rather than introduce brittleness.
+    </div>
+
+    <h3>3.2 Prompt Engineering for Cognitive Ergonomics</h3>
+    <p>The system prompt engineered for the LLM incorporates cognitive psychology principles to enforce six strict constraints:</p>
+    <ul>
+      <li><strong>Bounded Working Memory (Miller's Law):</strong> Steps are strictly constrained to 3–7 items, preventing cognitive overload.</li>
+      <li><strong>Imperative Action Verbs:</strong> Every step MUST begin with a concrete physical or digital verb (e.g., <em>Open, Read, Pick, Write</em>). This eliminates the friction of deciding how to begin.</li>
+      <li><strong>Low-Friction Initiation:</strong> Step 1 must require virtually zero effort (e.g., <em>"Open the document to page 1", "Pick up 3 items off the floor"</em>).</li>
+      <li><strong>Time Boxing:</strong> Each sub-step is scoped to roughly 2–5 minutes of focused effort.</li>
+      <li><strong>Zero-Guilt Affective Tone:</strong> The model is explicitly forbidden from using judgmental, patronizing, or urgent language.</li>
+      <li><strong>Structured JSON Output:</strong> The model outputs a clean JSON array of strings, parsed client-side with automatic error sanitation.</li>
+    </ul>
+
+    <h3>3.3 Local-First Client Privacy</h3>
+    <p>
+      Privacy is an essential ethical concern when processing personal obligations and mental wellness patterns. QuietStart operates entirely local-first: user tasks, preferences, and API credentials reside strictly in the user's browser <code>localStorage</code>. No personal data, tracking cookies, or telemetries are ever transmitted to any developer server.
+    </p>
+
+    <h2>4. What We Checked (Testing & Empirical Verification)</h2>
+    <p>
+      To rigorously validate that task deconstructions meet our cognitive criteria, we implemented an automated test harness (<code>tests.js</code>) executable via Node.js CLI and an interactive browser dashboard (<code>tests.html</code>). The benchmark evaluates 12 diverse real-world tasks spanning academic, administrative, chore, coding, and health domains.
+    </p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Test Task Title</th>
+          <th>Domain</th>
+          <th>Validation Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Write a 10-page history research paper</td><td>Academic</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Open'</td></tr>
+        <tr><td>2</td><td>Clean the messy kitchen and wash dishes</td><td>Chores</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Pick'</td></tr>
+        <tr><td>3</td><td>Study for Introduction to AI midterm</td><td>Academic</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Open'</td></tr>
+        <tr><td>4</td><td>File annual state and federal taxes</td><td>Administrative</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Find'</td></tr>
+        <tr><td>5</td><td>Email professor asking for extension</td><td>Communication</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Open'</td></tr>
+        <tr><td>6</td><td>Workout for 30 minutes at campus gym</td><td>Health / Fitness</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Put'</td></tr>
+        <tr><td>7</td><td>Fix bug causing memory leak in script</td><td>Technical</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Open'</td></tr>
+        <tr><td>8</td><td>Fold three baskets of clean laundry</td><td>Chores</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Pick'</td></tr>
+        <tr><td>9</td><td>Prepare slide presentation for project</td><td>Presentation</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Open'</td></tr>
+        <tr><td>10</td><td>Schedule dentist cleaning appointment</td><td>Medical / Admin</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Find'</td></tr>
+        <tr><td>11</td><td>Cook healthy vegetable stir-fry dinner</td><td>Food / Cooking</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Clear'</td></tr>
+        <tr><td>12</td><td>Organize desktop files and downloads</td><td>Digital Chores</td><td><span class="badge-pass">PASS</span> 5 steps • Starts with 'Pick'</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      <strong>Benchmark Summary:</strong> 12 out of 12 tests passed (<strong>100% success rate</strong>). All outputs strictly fulfilled the 3–7 step length constraint, conformed to the dictionary of concrete imperative action verbs, and provided an effortless step 1.
+    </p>
+
+    <h2>5. What Is Next (Future Roadmap & Planned Enhancements)</h2>
+    <p>While QuietStart currently delivers a complete, validated user experience, several compelling directions exist for future development and research:</p>
+    <ul>
+      <li><strong>In-Browser WebGPU AI (Zero-Cost Local Intelligence):</strong> Integrate on-device quantized models via Chrome's experimental WebGPU / Gemini Nano APIs or Transformers.js. This will deliver contextual AI breakdowns entirely offline without requiring users to purchase third-party API keys.</li>
+      <li><strong>Multimodal Audio Guidance (Web Speech API):</strong> Allow users struggling with motor fatigue or visual screen overload to speak their task aloud and listen to micro-steps narrated in a calm, soothing voice.</li>
+      <li><strong>Biometric & Behavioral Adaptive Timing:</strong> Instead of a static 5-minute timer, dynamically suggest 2, 5, or 10-minute focus durations based on historical completion pacing and user-reported energy levels.</li>
+      <li><strong>Export to Open Calendar Formats:</strong> Allow gentle export of completed calm sessions to standard iCalendar (<code>.ics</code>) files for optional syncing with university course calendars.</li>
+    </ul>
+  </div>
+
+</body>
+</html>

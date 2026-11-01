@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuietStart — Class Presentation (11/02)</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --card-bg: #ffffff;
+      --text: #27302d;
+      --muted: #626e68;
+      --sage-dark: #2f4f4f;
+      --sage-main: #52796f;
+      --sage-light: #d8e2dc;
+      --warm: #d4a373;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #1e2624;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Presentation Frame (16:9 Aspect Ratio) */
+    .deck-container {
+      width: 92vw;
+      max-width: 1100px;
+      aspect-ratio: 16 / 9;
+      background: var(--bg);
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 3.5rem 4rem;
+      display: none;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .slide-top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--sage-main);
+    }
+
+    .slide-tag {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--sage-main);
+      margin-bottom: 0.5rem;
+    }
+
+    .slide-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--sage-dark);
+      line-height: 1.2;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .slide-subtitle {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 1.8rem;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Grid Layouts */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--sage-light);
+      border-radius: 10px;
+      padding: 1.4rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      color: var(--sage-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* Title Slide Specials */
+    .title-slide {
+      background: #ffffff;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .title-badge {
+      background: #edf2ee;
+      color: var(--sage-dark);
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      display: inline-block;
+    }
+
+    .title-slide h1 {
+      font-size: 3rem;
+      color: var(--sage-dark);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .title-slide p.lead {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0 auto 2rem auto;
+      line-height: 1.5;
+    }
+
+    .title-slide .meta {
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* Metrics Row */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--sage-light);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .metric-val {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--sage-main);
+    }
+
+    .metric-lbl {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Bottom Nav Bar */
+    .deck-nav {
+      position: absolute;
+      bottom: 1rem;
+      left: 2rem;
+      right: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      z-index: 10;
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--sage-light);
+      color: var(--sage-dark);
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .nav-btn:hover {
+      background: var(--sage-main);
+      color: #fff;
+    }
+
+    .top-links {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 20;
+    }
+
+    .top-links a {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      color: var(--sage-dark);
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid var(--sage-light);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-container">
+    <div class="slide-top-bar"></div>
+
+    <div class="top-links">
+      <a href="index.html">App</a>
+      <a href="report.html">Report</a>
+      <a href="QuietStart_Presentation_11-02.pptx" download>Download PPTX</a>
+    </div>
+
+    <!-- SLIDE 1: Title -->
+    <div class="slide title-slide active" data-index="1">
+      <span class="title-badge">Introduction to AI • Midterm Project Presentation</span>
+      <h1>🌿 QuietStart</h1>
+      <p class="lead">An AI-powered low-friction micro-step companion designed to overcome task paralysis, executive dysfunction, and the doomscrolling loop.</p>
+      <div class="meta">Presentation Date: November 2, 2026 (11/02) • Plain HTML / JS / CSS • 100% Client Privacy</div>
+    </div>
+
+    <!-- SLIDE 2: The Problem -->
+    <div class="slide" data-index="2">
+      <div class="slide-tag">The Problem</div>
+      <h2 class="slide-title">Why Is Starting Tasks So Painful?</h2>
+      <div class="slide-subtitle">Traditional productivity apps worsen executive dysfunction through shame and overload</div>
+      <div class="slide-content">
+        <div class="grid-3">
+          <div class="feature-card">
+            <h3>01. The Ambiguity Cliff</h3>
+            <p>Large tasks ("Study for AI Midterm", "Write 10-page essay") lack an obvious 60-second entry point. The brain freezes in executive dysfunction.</p>
+          </div>
+          <div class="feature-card">
+            <h3>02. The Doomscroll Trap</h3>
+            <p>To numb task dread, people instinctively open social media or YouTube tabs. Dopamine algorithms capture focus for hours in trance-like doomscrolling.</p>
+          </div>
+          <div class="feature-card">
+            <h3>03. Shame-Based Tools</h3>
+            <p>Most productivity tools use red overdue alerts, penalty counters, and broken streak warnings—causing stress avoidance rather than momentum.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: What We Made -->
+    <div class="slide" data-index="3">
+      <div class="slide-tag">Solution Overview</div>
+      <h2 class="slide-title">What We Made: QuietStart</h2>
+      <div class="slide-subtitle">A calm, mobile-friendly web app built with zero build steps, zero frameworks, and zero shame</div>
+      <div class="slide-content">
+        <div class="grid-3">
+          <div class="feature-card">
+            <h3>⚡ Quick Add</h3>
+            <p>Type what's on your mind and press Enter. Zero tags, zero categories, zero forms.</p>
+          </div>
+          <div class="feature-card">
+            <h3>✨ Break It Down</h3>
+            <p>AI splits any task into 3–7 micro-steps (2–5 mins), guaranteed to begin with concrete action verbs.</p>
+          </div>
+          <div class="feature-card">
+            <h3>▶ Just Start Mode</h3>
+            <p>Shows ONE step at a time inside a serene focus overlay with a 5-minute timer and guilt-free Skip.</p>
+          </div>
+          <div class="feature-card">
+            <h3>🛡️ Anti-Doomscroll Shield</h3>
+            <p>Detects when you drift away to other tabs for 3+ minutes and sends a kind browser reality check.</p>
+          </div>
+          <div class="feature-card">
+            <h3>📅 Gentle Calendar & Repeat</h3>
+            <p>Review quiet wins with calm dots. Repeat any successful past day's routine with one click.</p>
+          </div>
+          <div class="feature-card">
+            <h3>🌱 Quiet Rollover</h3>
+            <p>Unfinished tasks roll over to tomorrow silently. No red overdue stamps, ever.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Architecture -->
+    <div class="slide" data-index="4">
+      <div class="slide-tag">AI Architecture</div>
+      <h2 class="slide-title">Hybrid Generative + Symbolic Engine</h2>
+      <div class="slide-subtitle">Delivering 100% reliability through a graceful degradation pattern</div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="feature-card">
+            <h3>1. Generative LLM Path (Online)</h3>
+            <p>• <strong>Direct Browser API:</strong> Supports OpenAI (GPT-4o-mini) and Google Gemini (1.5 Flash).</p>
+            <p>• <strong>Cognitive Prompt:</strong> Constrains steps to 3–7 items, requires imperative action verbs, and enforces zero-guilt affective tone.</p>
+            <p>• <strong>Strict Privacy:</strong> Keys stay in browser <code>localStorage</code> only.</p>
+          </div>
+          <div class="feature-card">
+            <h3>2. Symbolic Heuristic Fallback (Offline)</h3>
+            <p>• <strong>Guaranteed Availability:</strong> Triggers if no key is entered, network drops, or API rate limits occur.</p>
+            <p>• <strong>Keyword Regex Classifier:</strong> Routes tasks into academic, chores, coding, admin, fitness, or meals.</p>
+            <p>• <strong>Template Synthesizer:</strong> Generates concrete action-verb steps with effortless entry points.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: Anti-Doomscroll Shield -->
+    <div class="slide" data-index="5">
+      <div class="slide-tag">Behavioral Ergonomics</div>
+      <h2 class="slide-title">Stopping the Drift: Anti-Doomscroll Shield</h2>
+      <div class="slide-subtitle">Using the Page Visibility API to break algorithmic scrolling trances</div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="feature-card">
+            <h3>Tab Drift Detection</h3>
+            <p>Monitors <code>document.visibilitychange</code>. When the user switches to a feed for 3+ minutes, sends a gentle browser notification:</p>
+            <p style="font-style: italic; color: var(--sage-main); margin-top: 0.5rem;">"Did an algorithm grab your attention? Take a breath. Come back whenever you are ready."</p>
+          </div>
+          <div class="feature-card">
+            <h3>Compassionate Re-Anchoring</h3>
+            <p>Returning to the tab plays a calming 528 Hz Web Audio sine wave and displays a zero-shame welcome toast reminding users to drop their shoulders and resume their 2-minute step.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: Verification & Testing -->
+    <div class="slide" data-index="6">
+      <div class="slide-tag">Testing & Verification</div>
+      <h2 class="slide-title">Empirical Validation: 100% Pass Rate</h2>
+      <div class="slide-subtitle">12 benchmark tasks verified via automated CLI and browser testing suites</div>
+      <div class="slide-content">
+        <div class="metrics-row">
+          <div class="metric-card"><div class="metric-val">12 / 12</div><div class="metric-lbl">Benchmark Tasks Passed</div></div>
+          <div class="metric-card"><div class="metric-val">100%</div><div class="metric-lbl">Action-Verb Starters</div></div>
+          <div class="metric-card"><div class="metric-val">3–7</div><div class="metric-lbl">Step Bounds Checked</div></div>
+          <div class="metric-card"><div class="metric-val">0ms</div><div class="metric-lbl">Local Heuristic Latency</div></div>
+        </div>
+        <div class="feature-card">
+          <h3>Dual Test Runner Architecture</h3>
+          <p>• <strong>CLI Test Suite (<code>tests.js</code>):</strong> Executed via Node.js for grading and CI verification.</p>
+          <p>• <strong>Visual Web Test Runner (<code>tests.html</code>):</strong> Color-coded browser dashboard displaying verbs, step counts, and low-friction starters for live demonstration.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Live Demo Flow -->
+    <div class="slide" data-index="7">
+      <div class="slide-tag">Live Demonstration</div>
+      <h2 class="slide-title">Classroom Walkthrough (11/02)</h2>
+      <div class="slide-subtitle">Five key interactions to showcase in 3 minutes</div>
+      <div class="slide-content">
+        <div class="feature-card" style="line-height: 1.8;">
+          <p><strong>1. Quick Add:</strong> Type <em>"Write history paper"</em> → Press Enter (Zero friction).</p>
+          <p><strong>2. AI Breakdown:</strong> Click <em>"✨ Break down"</em> → Observe 5 tiny, action-verb micro-steps.</p>
+          <p><strong>3. Just Start:</strong> Click <em>"▶ Just Start"</em> → Single step focus with the 5-minute timer.</p>
+          <p><strong>4. Anti-Doomscroll:</strong> Switch tabs → Experience the gentle drift notification.</p>
+          <p><strong>5. Repeat Calendar:</strong> Click 📅 → Select yesterday → Click <em>"🔁 Repeat Entire Day"</em>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: Ethics & Future Work -->
+    <div class="slide" data-index="8">
+      <div class="slide-tag">Ethics & Roadmap</div>
+      <h2 class="slide-title">Ethics, Limitations & What Is Next</h2>
+      <div class="slide-subtitle">Responsible design practices and future technical directions</div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="feature-card">
+            <h3>Ethical Guardrails & Limitations</h3>
+            <p>• <strong>Self-Help Notice:</strong> Educational project, not medical/clinical advice.</p>
+            <p>• <strong>Client-Side Storage:</strong> Data stays in browser <code>localStorage</code>; zero tracking.</p>
+            <p>• <strong>Tab Dependency:</strong> Notifications require active browser session.</p>
+          </div>
+          <div class="feature-card">
+            <h3>What Is Next</h3>
+            <p>• <strong>WebGPU Local AI:</strong> Run quantized models (Gemini Nano) directly in browser memory.</p>
+            <p>• <strong>Voice Dictation:</strong> Web Speech API for hands-free calming task capture.</p>
+            <p>• <strong>Adaptive Pacing:</strong> Auto-calibrate timers (2, 5, 10 min) to user energy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: Conclusion -->
+    <div class="slide title-slide" data-index="9">
+      <span class="title-badge">Take things one tiny step at a time</span>
+      <h1>Thank You!</h1>
+      <p class="lead">QuietStart: Making productivity humane, guilt-free, and approachable through hybrid AI.</p>
+      <div class="meta">Questions & Discussion • Introduction to AI Midterm Project (11/02/2026)</div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="deck-nav">
+      <div id="slide-indicator">Slide 1 of 9</div>
+      <div>Use ← and → arrow keys to navigate • Press F for Fullscreen</div>
+      <div class="nav-controls">
+        <button class="nav-btn" onclick="prevSlide()">‹</button>
+        <button class="nav-btn" onclick="nextSlide()">›</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const indicator = document.getElementById('slide-indicator');
+
+    function showSlide(index) {
+      if (index < 1) index = 1;
+      if (index > totalSlides) index = totalSlides;
+      currentSlide = index;
+
+      slides.forEach(slide => {
+        slide.classList.remove('active');
+        if (parseInt(slide.getAttribute('data-index'), 10) === currentSlide) {
+          slide.classList.add('active');
+        }
+      });
+
+      indicator.textContent = `Slide ${currentSlide} of ${totalSlides}`;
+    }
+
+    function nextSlide() { showSlide(currentSlide + 1); }
+    function prevSlide() { showSlide(currentSlide - 1); }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        if (!document.fullscreenElement) {
+          document.querySelector('.deck-container').requestFullscreen().catch(()=>{});
+        } else {
+          document.exitFullscreen().catch(()=>{});
+        }
+      }
+    });
+  </script>
+</body>
+</html>
