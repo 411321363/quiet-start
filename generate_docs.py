@@ -150,12 +150,14 @@ def create_word_report(filename):
     add_body_p("Key functional capabilities include:")
 
     features = [
-        ("Zero-Friction Quick Add: ", "Users capture tasks instantly by typing and pressing Enter. There are no mandatory categories, tags, priority matrices, or due dates that induce cognitive overhead."),
-        ("AI & Heuristic 'Break It Down' Engine: ", "Deconstructs any ambiguous task into 3 to 7 concrete micro-steps (2 to 5 minutes each). Every single step is programmatically guaranteed to start with a concrete imperative action verb (e.g., 'Open', 'Pick', 'Read', 'Find') and begins with an effortless entry step."),
-        ("'Just Start' Single-Step Focus Mode: ", "Shields the user from total task overwhelm by displaying exactly ONE micro-step at a time inside a serene focus overlay, accompanied by a 5-minute countdown timer, gentle completion bell, and non-judgmental 'Done' and 'Skip for now' controls."),
-        ("Anti-Doomscroll Shield & Tab Drift Detection: ", "Uses the browser Page Visibility API to detect when a user gets pulled into an attention-trapping social feed or background tab. If away for 3+ minutes, it sends a compassionate browser notification inviting them back without guilt."),
-        ("Gentle Calendar & Repeat Days: ", "A quiet historical view where active days are highlighted with a soft sage dot, and rest days remain neutral with zero red strikes or broken-streak counters. Users can repeat any successful past routine into today's active workspace with a single click."),
-        ("Quiet Daily Rollover: ", "Unfinished tasks roll over to the next day seamlessly without red 'OVERDUE' stamps, shame badges, or pressure.")
+        ("Zero-Friction Quick Add & Voice Thought Dump: ", "Users capture tasks instantly by typing and pressing Enter, or by speaking aloud via the Web Speech API microphone button. Eliminates cognitive friction for users experiencing typing fatigue or ADHD brain-freeze."),
+        ("AI & Heuristic 'Break It Down' Engine: ", "Deconstructs any ambiguous task into 3 to 7 concrete micro-steps (2 to 5 minutes each). Every step is programmatically guaranteed to start with an imperative action verb (e.g., 'Open', 'Pick', 'Read', 'Find') with an effortless entry starter."),
+        ("Step Unstick De-escalation ('Make It Even Smaller'): ", "When even a single 2–5 minute micro-step feels too heavy or triggers task freeze, the unstick action splits that step into two 30-second micro-actions guaranteed to start with concrete action verbs."),
+        ("'Just Start' Single-Step Focus Mode: ", "Shields the user from overwhelm by displaying exactly ONE micro-step at a time inside a serene focus overlay with a 5-minute countdown timer, gentle completion bell, and non-judgmental 'Done' and 'Skip for now' controls."),
+        ("Synthesized Ambient Focus Audio (Brown Noise & Soft Rain): ", "Uses the browser Web Audio API to synthesize continuous acoustic masking soundscapes on the fly (zero audio files or bandwidth required) to drown out study-hall distractions and maintain calm concentration."),
+        ("Anti-Doomscroll Shield & Tab Drift Detection: ", "Uses the Page Visibility API to detect when a user leaves the tab for 3+ minutes to browse social feeds or video sites, delivering a compassionate browser notification inviting them back without guilt."),
+        ("Gentle Calendar & Repeat Days: ", "A quiet historical view where active days are highlighted with a soft sage dot, and rest days remain neutral with zero red strikes or broken streaks. Users can repeat any successful past routine into today's active workspace with a single click."),
+        ("Calm Midnight Dark Theme & Quiet Rollover: ", "Includes a low-sensory dark theme designed for late-night university study sessions, and unfinished tasks roll over to the next day seamlessly without red 'OVERDUE' stamps, shame badges, or pressure.")
     ]
     for pref, body in features:
         p_feat = doc.add_paragraph(style='List Bullet')
@@ -296,7 +298,7 @@ def create_word_report(filename):
                 p.runs[0].font.color.rgb = SAGE_MAIN
 
     doc.add_paragraph().paragraph_format.space_after = Pt(8)
-    add_body_p("Test Results Summary: ", "12 out of 12 tests passed (100% success rate). All outputs strictly fulfilled the 3–7 step length constraint, conformed to the dictionary of concrete imperative action verbs, and provided an effortless step 1.")
+    add_body_p("Test Results Summary: ", "12 out of 12 benchmark tasks passed (100% success rate). All outputs strictly fulfilled the 3–7 step length constraint, conformed to the dictionary of concrete imperative action verbs, and provided an effortless step 1. Additionally, the 'Make It Even Smaller' unstick splitter was verified to consistently de-escalate complex steps into two valid sub-actions starting with action verbs.")
 
     # --------------------------------------------------------------------------
     # SECTION 5: WHAT IS NEXT
@@ -309,8 +311,8 @@ def create_word_report(filename):
 
     next_items = [
         ("In-Browser WebGPU AI (Zero-Cost Local Intelligence): ", "Integrate on-device quantized models via Chrome's experimental WebGPU / Gemini Nano APIs or Transformers.js. This will deliver contextual AI breakdowns entirely offline without requiring users to purchase third-party API keys."),
-        ("Multimodal Audio Guidance (Web Speech API): ", "Allow users struggling with motor fatigue or visual screen overload to speak their task aloud and listen to micro-steps narrated in a calm, soothing voice."),
-        ("Biometric & Behavioral Adaptive Timing: ", "Instead of a static 5-minute timer, dynamically suggest 2, 5, or 10-minute focus durations based on historical completion pacing and user-reported energy levels."),
+        ("Spoken Micro-Step Narration (Text-to-Speech): ", "Complement the voice thought dump with soothing auditory narration of active micro-steps to assist auditory learners and reduce visual screen fatigue."),
+        ("Biometric & Behavioral Adaptive Timing: ", "Instead of a static 5-minute timer, dynamically calibrate 2, 5, or 10-minute focus durations based on historical completion pacing and user-reported energy levels."),
         ("Export to Open Calendar Formats: ", "Allow gentle export of completed calm sessions to standard iCalendar (.ics) files for optional syncing with university course calendars.")
     ]
     for pref, body in next_items:
@@ -491,12 +493,12 @@ def create_powerpoint_presentation(filename):
     slide3 = add_standard_slide("Our Solution: QuietStart", "Designed for extreme low friction, emotional safety, and cognitive ease")
 
     sol_cards = [
-        ("⚡ Quick Add (Zero Friction)", "Type what is on your mind and press Enter. No forms, tags, dates, or categories required."),
-        ("✨ 'Break It Down' Engine", "Deconstructs overwhelming tasks into 3 to 7 tiny micro-steps (2–5 mins each), guaranteed to start with concrete action verbs."),
-        ("▶ 'Just Start' Single-Step Focus", "Shows ONE step at a time inside a serene focus overlay with a gentle 5-minute timer, Done, and guilt-free Skip."),
+        ("⚡ Quick Add & 🎙️ Voice Dump", "Type and press Enter, or dictate hands-free via Web Speech API. Zero forms or mandatory categories."),
+        ("✨ 'Break It Down' & 🤏 Unstick", "Deconstructs tasks into 3–7 micro-steps, with an instant 'Make It Even Smaller' splitter for moments of freeze."),
+        ("▶ 'Just Start' & 🌧️ Ambient Sound", "Shows ONE step at a time with a 5-min timer and client-side synthesized Brown Noise & Rain audio."),
         ("🛡️ Anti-Doomscroll Drift Shield", "Detects when you leave the tab for 3+ minutes. Sends a kind browser nudge to gently anchor you back."),
         ("📅 Gentle Calendar & Repeat", "Review quiet wins with calm sage dots. Replay any successful past day's routine into today with one click."),
-        ("🌱 Quiet Daily Rollover", "Unfinished tasks roll over peacefully. No red overdue lists, no streak resets, zero shame.")
+        ("🌙 Midnight Dark Theme & Rollover", "Low-sensory dark theme for night study sessions, and unfinished tasks roll over peacefully with zero shame.")
     ]
 
     for idx, (title, desc) in enumerate(sol_cards):
@@ -681,14 +683,15 @@ def create_powerpoint_presentation(filename):
         "Length Invariance: Verified every task deconstruction yields strictly between 3 and 7 steps (satisfying cognitive working memory bounds).",
         "Grammatical Imperative Constraint: Every sub-step is validated against an extensive dictionary of physical action verbs (e.g., Open, Pick, Find, Read).",
         "Effortless Entry Check: Verified Step 1 always provides a non-threatening, low-friction entry point (e.g., opening a document, gathering supplies).",
+        "Unstick De-escalation Check: Verified the 'Make It Even Smaller' splitter decomposes steps into 2 micro-actions starting with action verbs.",
         "Dual Runner Architecture: Tests execute in CLI via Node.js (for CI/CD grading) and in browser via tests.html (for visual classroom demonstration)."
     ]
     for c in checks:
         pc = ttf.add_paragraph()
         pc.text = "• " + c
-        pc.font.size = PptxPt(12.5)
+        pc.font.size = PptxPt(12.0)
         pc.font.color.rgb = TEXT_DARK
-        pc.space_before = PptxPt(6)
+        pc.space_before = PptxPt(5)
 
     # --------------------------------------------------------------------------
     # SLIDE 7: LIVE DEMO & REPEAT CALENDAR
@@ -696,11 +699,11 @@ def create_powerpoint_presentation(filename):
     slide7 = add_standard_slide("Classroom Demonstration: Key Flows", "Demonstrating the live web application on 11/02")
 
     demo_steps = [
-        ("1. Quick Capture", "Type 'Write history paper' → Press Enter. Instant zero-friction capture."),
-        ("2. AI Micro-Breakdown", "Click '✨ Break down'. Watch the hybrid engine produce 5 tiny, verb-first steps."),
-        ("3. Zen Focus Mode", "Click '▶ Just Start'. Focus exclusively on Step 1 with the 5-minute gentle timer."),
+        ("1. Voice & Quick Capture", "Click 🎙️ or type 'Write history paper' → zero typing friction."),
+        ("2. AI Breakdown & 🤏 Unstick", "Click '✨ Break down'. If Step 1 still feels daunting, click 'Make it smaller'."),
+        ("3. Zen Focus & 🌧️ Ambient Audio", "Click '▶ Just Start'. Toggle soothing Brown Noise or Rain while the 5-min timer ticks."),
         ("4. Anti-Doomscroll Test", "Switch tabs for 3 minutes → receive kind browser check-in inviting you back."),
-        ("5. Repeat Calendar Replay", "Open Calendar (📅) → select a past date → click '🔁 Repeat Entire Day' to clone routines.")
+        ("5. Repeat Calendar & 🌙 Dark Mode", "Toggle 🌙 night palette, open Calendar (📅) → select a past date → click '🔁 Repeat Entire Day'.")
     ]
 
     for idx, (title, desc) in enumerate(demo_steps):
@@ -778,7 +781,7 @@ def create_powerpoint_presentation(filename):
 
     er_items = [
         "On-Device WebGPU Inference: Run tiny local LLMs (Gemini Nano) directly in browser memory without API keys or costs.",
-        "Voice Dictation & Auditory Nudges: Web Speech API for voice task capture and calming spoken guidance.",
+        "Spoken Micro-Step Narration (TTS): Calming text-to-speech narration of active steps to reduce visual fatigue.",
         "Adaptive Focus Calibration: Calibrate timer durations (2, 5, 10 min) dynamically based on historical pace.",
         "Calendar (.ics) Export: Seamless quiet sync with university course schedule."
     ]

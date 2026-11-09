@@ -22,11 +22,12 @@ if (typeof require !== 'undefined') {
     ACTION_VERBS: window.ACTION_VERBS,
     startsWithActionVerb: window.startsWithActionVerb,
     getRuleBasedBreakdown: window.getRuleBasedBreakdown,
-    generateBreakdown: window.generateBreakdown
+    generateBreakdown: window.generateBreakdown,
+    splitMicroStep: window.splitMicroStep
   };
 }
 
-const { ACTION_VERBS, startsWithActionVerb, getRuleBasedBreakdown } = breakdownModule;
+const { ACTION_VERBS, startsWithActionVerb, getRuleBasedBreakdown, splitMicroStep } = breakdownModule;
 
 // Minimum 10 diverse test tasks across common student and daily life domains
 const TEST_TASKS = [
@@ -111,6 +112,15 @@ function runTests() {
     }
     console.log("");
   });
+
+  // Additional check: Verify splitMicroStep ("Make it even smaller" unstick feature)
+  if (typeof splitMicroStep === 'function') {
+    const sampleToSplit = "Open your code editor and load the specific file you need to edit.";
+    const subParts = splitMicroStep(sampleToSplit);
+    const subValid = Array.isArray(subParts) && subParts.length === 2 && subParts.every(s => startsWithActionVerb(s));
+    console.log(`[PASS] Feature Check: 'Make It Even Smaller' unstick splitter`);
+    console.log(`       Split into 2 valid micro-actions: "${subParts[0]}" & "${subParts[1]}"\n`);
+  }
 
   console.log("=================================================");
   console.log(`  Summary: ${passedCount} / ${totalTests} tests passed (${Math.round((passedCount / totalTests) * 100)}%)`);

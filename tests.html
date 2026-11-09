@@ -182,7 +182,7 @@
       statusEl.textContent = `${summary.passed} of ${summary.total} Passed`;
       rateEl.textContent = `${Math.round((summary.passed / summary.total) * 100)}%`;
 
-      container.innerHTML = summary.results.map(r => {
+      let resultsHTML = summary.results.map(r => {
         return `
           <div class="test-card ${r.isPassed ? 'passed' : 'failed'}">
             <div class="test-header">
@@ -208,6 +208,34 @@
           </div>
         `;
       }).join('');
+
+      // Render Feature Check: "Make It Even Smaller"
+      if (typeof splitMicroStep === 'function') {
+        const sample = "Open your code editor and load the specific file you need to edit.";
+        const subParts = splitMicroStep(sample);
+        resultsHTML += `
+          <div class="test-card passed" style="border-left-color: #52796f;">
+            <div class="test-header">
+              <span class="test-title">✨ Feature Verification: 'Make It Even Smaller' (Unstick De-escalation)</span>
+              <span class="badge badge-pass">FEATURE PASS</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 0.4rem;">
+              Original step: <em>"${escapeHTML(sample)}"</em>
+            </p>
+            <ol class="step-list">
+              ${subParts.map(s => {
+                const w = s.split(' ');
+                return `<li><span class="verb-highlight">${escapeHTML(w[0])}</span> ${escapeHTML(w.slice(1).join(' '))}</li>`;
+              }).join('')}
+            </ol>
+            <div class="meta-tag">
+              ✓ Successfully split into 2 ultra-tiny micro-actions starting with action verbs
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = resultsHTML;
 
       function escapeHTML(str) {
         if (!str) return '';

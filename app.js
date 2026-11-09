@@ -17,6 +17,7 @@ const STORAGE_KEY_TASKS = 'quiet_tasks_v1';
 const STORAGE_KEY_SETTINGS = 'quiet_settings_v1';
 const STORAGE_KEY_LAST_DATE = 'quiet_last_active_date_v1';
 const STORAGE_KEY_HISTORY = 'quiet_history_v1';
+const STORAGE_KEY_THEME = 'quiet_theme_v1';
 
 // Default user settings
 const DEFAULT_SETTINGS = {
@@ -74,12 +75,14 @@ let zenSession = {
 // 2. Initialization & Daily Rollover Check
 // ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   loadSettings();
   loadTasks();
   loadHistory();
   checkQuietDailyRollover();
   renderTasks();
   initEventListeners();
+  initVoiceInput();
   initReminderScheduler();
   initDoomscrollShield();
   initSuddenSurpriseNudges();
@@ -199,6 +202,19 @@ function initEventListeners() {
   zenTimerToggleBtn.addEventListener('click', () => toggleZenTimer());
   zenTimerResetBtn.addEventListener('click', () => resetZenTimer());
   zenFinishBackBtn.addEventListener('click', () => closeJustStartMode());
+
+  // Theme toggle
+  const themeBtn = document.getElementById('theme-toggle-btn');
+  if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+
+  // Unstick button ("Make It Even Smaller")
+  const zenUnstickBtn = document.getElementById('zen-btn-unstick');
+  if (zenUnstickBtn) zenUnstickBtn.addEventListener('click', unstickCurrentZenStep);
+
+  // Ambient focus sound chips
+  document.querySelectorAll('.sound-chip').forEach(chip => {
+    chip.addEventListener('click', () => setAmbientSound(chip.dataset.sound));
+  });
 
   // Calendar Modal controls
   const calendarBtn = document.getElementById('calendar-btn');
@@ -473,6 +489,7 @@ function skipCurrentZenStep() {
  */
 function showZenCompletion() {
   pauseZenTimer();
+  stopAmbientSound();
   const activeView = document.getElementById('zen-active-view');
   const completeView = document.getElementById('zen-complete-view');
 
@@ -485,6 +502,7 @@ function showZenCompletion() {
  */
 function closeJustStartMode() {
   pauseZenTimer();
+  stopAmbientSound();
   const overlay = document.getElementById('just-start-overlay');
   overlay.classList.remove('active');
   renderTasks();
@@ -503,6 +521,11 @@ function startZenTimer() {
   zenSession.timerRunning = true;
   const toggleBtn = document.getElementById('zen-timer-toggle');
   toggleBtn.textContent = 'Pause';
+
+  // If user selected an ambient focus sound, start playing smoothly
+  if (currentAmbientMode !== 'off') {
+    playAmbientSound(currentAmbientMode);
+  }
 
   zenSession.timerInterval = setInterval(() => {
     if (zenSession.timerSeconds > 0) {
@@ -524,6 +547,7 @@ function pauseZenTimer() {
   }
   const toggleBtn = document.getElementById('zen-timer-toggle');
   if (toggleBtn) toggleBtn.textContent = 'Start';
+  stopAmbientSound();
 }
 
 function resetZenTimer() {
@@ -1254,4 +1278,274 @@ function repeatSingleTaskFromHistory(dateStr, taskIndex) {
   tasks.unshift(newTask);
   saveTasks();
   showToast(`Added "${item.title}" to today.`);
+}
+
+// ============================================================================
+// 11. Theme Management (Dark & Light Mode)
+// ============================================================================
+
+function initTheme() {
+  const savedTheme = localStorage.getItem(STORAGE_KEY_THEME);
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+  applyTheme(initialTheme);
+}
+
+function applyTheme(theme) {
+  const icon = document.getElementById('theme-icon');
+  if (theme === 'dark') {
+    document.body.classList.add('dark-theme');
+    localStorage.setItem(STORAGE_KEY_THEME, 'dark');
+    if (icon) {
+      // Sun icon when in dark mode (click to return to light)
+      icon.innerHTML = `
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      `;
+    }
+  } else {
+    document.body.classList.remove('dark-theme');
+    localStorage.setItem(STORAGE_KEY_THEME, 'light');
+    if (icon) {
+      // Moon icon when in light mode (click to switch to dark)
+      icon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
+    }
+  }
+}
+
+function toggleTheme() {
+  const isDark = document.body.classList.contains('dark-theme');
+  applyTheme(isDark ? 'light' : 'dark');
+  showToast(isDark ? "🌿 Switched to soft day mode." : "🌙 Switched to soothing night mode.");
+}
+
+// ============================================================================
+// 12. Voice Thought Dump (Web Speech API)
+// ============================================================================
+let speechRecognitionInstance = null;
+let isVoiceListening = false;
+
+function initVoiceInput() {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const voiceBtn = document.getElementById('voice-input-btn');
+  if (!voiceBtn) return;
+
+  if (!SpeechRec) {
+    voiceBtn.title = "Speech recognition is not supported in this browser";
+    voiceBtn.style.opacity = '0.6';
+    voiceBtn.addEventListener('click', () => {
+      showToast("Speech recognition isn't supported in this browser. You can type directly!", "kind-nudge");
+    });
+    return;
+  }
+
+  speechRecognitionInstance = new SpeechRec();
+  speechRecognitionInstance.continuous = false;
+  speechRecognitionInstance.interimResults = true;
+  speechRecognitionInstance.lang = 'en-US';
+
+  const inputEl = document.getElementById('quick-add-input');
+
+  speechRecognitionInstance.onstart = () => {
+    isVoiceListening = true;
+    voiceBtn.classList.add('listening');
+    showToast("🎙️ Listening... speak your thought calmly.", "kind-nudge");
+  };
+
+  speechRecognitionInstance.onresult = (event) => {
+    const transcript = Array.from(event.results)
+      .map(result => result[0].transcript)
+      .join('');
+    if (inputEl) {
+      inputEl.value = transcript;
+    }
+  };
+
+  speechRecognitionInstance.onerror = (err) => {
+    console.warn("Speech recognition error:", err);
+    stopVoiceInput();
+  };
+
+  speechRecognitionInstance.onend = () => {
+    stopVoiceInput();
+  };
+
+  voiceBtn.addEventListener('click', () => {
+    if (isVoiceListening) {
+      speechRecognitionInstance.stop();
+    } else {
+      try {
+        speechRecognitionInstance.start();
+      } catch (e) {
+        speechRecognitionInstance.stop();
+      }
+    }
+  });
+}
+
+function stopVoiceInput() {
+  isVoiceListening = false;
+  const voiceBtn = document.getElementById('voice-input-btn');
+  if (voiceBtn) voiceBtn.classList.remove('listening');
+}
+
+// ============================================================================
+// 13. Ambient Focus Audio Synthesizer (Web Audio API)
+// Mathematically synthesized 100% offline, zero audio files needed
+// ============================================================================
+let ambientAudioCtx = null;
+let ambientSourceNode = null;
+let ambientGainNode = null;
+let currentAmbientMode = 'off'; // 'off' | 'brown' | 'rain'
+
+function getAudioContext() {
+  if (!ambientAudioCtx) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) ambientAudioCtx = new AudioCtx();
+  }
+  if (ambientAudioCtx && ambientAudioCtx.state === 'suspended') {
+    ambientAudioCtx.resume();
+  }
+  return ambientAudioCtx;
+}
+
+function setAmbientSound(mode) {
+  currentAmbientMode = mode;
+  document.querySelectorAll('.sound-chip').forEach(chip => {
+    chip.classList.toggle('active', chip.dataset.sound === mode);
+  });
+
+  if (mode === 'off') {
+    stopAmbientSound();
+    showToast("🎧 Ambient focus audio paused.");
+  } else {
+    playAmbientSound(mode);
+    showToast(`🎧 Playing calming ${mode === 'brown' ? 'Brown Noise' : 'Soft Rain'}...`);
+  }
+}
+
+function playAmbientSound(mode) {
+  stopAmbientSound();
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  const sampleRate = ctx.sampleRate;
+  const bufferDuration = 5; // 5-second seamless noise buffer
+  const totalSamples = sampleRate * bufferDuration;
+  const buffer = ctx.createBuffer(1, totalSamples, sampleRate);
+  const data = buffer.getChannelData(0);
+
+  if (mode === 'brown') {
+    // True Brownian Noise (integrated white noise, low frequency focus sound)
+    let lastOut = 0.0;
+    for (let i = 0; i < totalSamples; i++) {
+      const white = Math.random() * 2 - 1;
+      lastOut = (lastOut + (0.02 * white)) / 1.02;
+      data[i] = lastOut * 3.2; // Gain compensation
+    }
+  } else if (mode === 'rain') {
+    // Gentle Rain: Pink-filtered noise with gentle random water drops
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < totalSamples; i++) {
+      const white = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + white * 0.0555179;
+      b1 = 0.99332 * b1 + white * 0.0750759;
+      b2 = 0.96900 * b2 + white * 0.1538520;
+      b3 = 0.86650 * b3 + white * 0.3104856;
+      b4 = 0.55000 * b4 + white * 0.5329522;
+      b5 = -0.7616 * b5 - white * 0.0168980;
+      let pink = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+      b6 = white * 0.115926;
+      
+      const drop = Math.random() > 0.998 ? (Math.random() * 0.35) : 0;
+      data[i] = (pink * 0.12) + drop;
+    }
+  }
+
+  ambientSourceNode = ctx.createBufferSource();
+  ambientSourceNode.buffer = buffer;
+  ambientSourceNode.loop = true;
+
+  ambientGainNode = ctx.createGain();
+  ambientGainNode.gain.setValueAtTime(0.001, ctx.currentTime);
+  ambientGainNode.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 1.2); // Gentle fade-in
+
+  // Biquad filter to keep frequencies smooth and warm
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(mode === 'brown' ? 380 : 1200, ctx.currentTime);
+
+  ambientSourceNode.connect(filter);
+  filter.connect(ambientGainNode);
+  ambientGainNode.connect(ctx.destination);
+
+  ambientSourceNode.start();
+}
+
+function stopAmbientSound() {
+  if (ambientGainNode && ambientAudioCtx) {
+    try {
+      ambientGainNode.gain.setValueAtTime(ambientGainNode.gain.value, ambientAudioCtx.currentTime);
+      ambientGainNode.gain.exponentialRampToValueAtTime(0.0001, ambientAudioCtx.currentTime + 0.4);
+      setTimeout(() => {
+        if (ambientSourceNode) {
+          try { ambientSourceNode.stop(); } catch (e) {}
+          ambientSourceNode.disconnect();
+          ambientSourceNode = null;
+        }
+      }, 450);
+    } catch (e) {
+      if (ambientSourceNode) {
+        try { ambientSourceNode.stop(); } catch (e) {}
+        ambientSourceNode = null;
+      }
+    }
+  } else if (ambientSourceNode) {
+    try { ambientSourceNode.stop(); } catch (e) {}
+    ambientSourceNode = null;
+  }
+}
+
+// ============================================================================
+// 14. Step Unstick De-escalation ("Make It Even Smaller")
+// ============================================================================
+
+function unstickCurrentZenStep() {
+  const task = tasks.find(t => t.id === zenSession.taskId);
+  if (!task || !zenSession.steps[zenSession.stepIndex]) return;
+
+  const currentStep = zenSession.steps[zenSession.stepIndex];
+  
+  // Call splitMicroStep from breakdown.js
+  const smallerParts = typeof splitMicroStep === 'function'
+    ? splitMicroStep(currentStep.text)
+    : [
+        `Sit comfortably and look at what is needed for: ${currentStep.text}`,
+        `Spend 60 seconds starting the first tiny piece.`
+      ];
+
+  const newSubSteps = smallerParts.map(txt => ({
+    text: txt,
+    completed: false
+  }));
+
+  // Splice into task.steps replacing the current step with 2 smaller ones
+  task.steps.splice(zenSession.stepIndex, 1, ...newSubSteps);
+  
+  // Update active zen session
+  zenSession.steps = task.steps;
+
+  saveTasks();
+  resetZenTimer();
+  updateZenUI();
+  
+  showToast("🤏 De-escalated into 2 tiny, low-pressure steps.", "kind-nudge");
 }

@@ -227,12 +227,14 @@
     </p>
     <p>Key functional capabilities include:</p>
     <ul>
-      <li><strong>Zero-Friction Quick Add:</strong> Users capture tasks instantly by typing and pressing Enter. There are no mandatory categories, tags, priority matrices, or due dates that induce cognitive overhead.</li>
-      <li><strong>AI & Heuristic "Break It Down" Engine:</strong> Deconstructs any ambiguous task into 3 to 7 concrete micro-steps (2 to 5 minutes each). Every single step is programmatically guaranteed to start with a concrete imperative action verb (e.g., <em>Open, Pick, Read, Find</em>) and begins with an effortless entry step.</li>
-      <li><strong>"Just Start" Single-Step Focus Mode:</strong> Shields the user from total task overwhelm by displaying exactly ONE micro-step at a time inside a serene focus overlay, accompanied by a 5-minute countdown timer, gentle completion bell, and non-judgmental "Done" and "Skip for now" controls.</li>
-      <li><strong>Anti-Doomscroll Shield & Tab Drift Detection:</strong> Uses the browser Page Visibility API to detect when a user gets pulled into an attention-trapping social feed or background tab. If away for 3+ minutes, it sends a compassionate browser notification inviting them back without guilt.</li>
-      <li><strong>Gentle Calendar & Repeat Days:</strong> A quiet historical view where active days are highlighted with a soft sage dot, and rest days remain neutral with zero red strikes or broken-streak counters. Users can repeat any successful past routine into today's active workspace with a single click.</li>
-      <li><strong>Quiet Daily Rollover:</strong> Unfinished tasks roll over to the next day seamlessly without red 'OVERDUE' stamps, shame badges, or pressure.</li>
+      <li><strong>Zero-Friction Quick Add & Voice Thought Dump:</strong> Users capture tasks instantly by typing and pressing Enter, or by speaking aloud via the Web Speech API microphone button. Eliminates cognitive friction for users experiencing typing fatigue or ADHD brain-freeze.</li>
+      <li><strong>AI & Heuristic "Break It Down" Engine:</strong> Deconstructs any ambiguous task into 3 to 7 concrete micro-steps (2 to 5 minutes each). Every step is programmatically guaranteed to start with an imperative action verb (e.g., <em>Open, Pick, Read, Find</em>) with an effortless entry starter.</li>
+      <li><strong>Step Unstick De-escalation ("Make It Even Smaller"):</strong> When even a single 2–5 minute micro-step feels too heavy or triggers task freeze, the unstick action splits that step into two 30-second micro-actions guaranteed to start with concrete action verbs.</li>
+      <li><strong>"Just Start" Single-Step Focus Mode:</strong> Shields the user from overwhelm by displaying exactly ONE micro-step at a time inside a serene focus overlay with a 5-minute countdown timer, gentle completion bell, and non-judgmental "Done" and "Skip for now" controls.</li>
+      <li><strong>Synthesized Ambient Focus Audio (Brown Noise & Soft Rain):</strong> Uses the browser Web Audio API to synthesize continuous acoustic masking soundscapes on the fly (zero audio files or bandwidth required) to drown out study-hall distractions and maintain calm concentration.</li>
+      <li><strong>Anti-Doomscroll Shield & Tab Drift Detection:</strong> Uses the Page Visibility API to detect when a user leaves the tab for 3+ minutes to browse social feeds or video sites, delivering a compassionate browser notification inviting them back without guilt.</li>
+      <li><strong>Gentle Calendar & Repeat Days:</strong> A quiet historical view where active days are highlighted with a soft sage dot, and rest days remain neutral with zero red strikes or broken streaks. Users can repeat any successful past routine into today's active workspace with a single click.</li>
+      <li><strong>Calm Midnight Dark Theme & Quiet Rollover:</strong> Includes a low-sensory dark theme designed for late-night university study sessions, and unfinished tasks roll over to the next day seamlessly without red 'OVERDUE' stamps, shame badges, or pressure.</li>
     </ul>
 
     <h2>2. Who It Is For (Target Audience & Cognitive Ergonomics)</h2>
@@ -310,15 +312,15 @@
     </table>
 
     <p>
-      <strong>Benchmark Summary:</strong> 12 out of 12 tests passed (<strong>100% success rate</strong>). All outputs strictly fulfilled the 3–7 step length constraint, conformed to the dictionary of concrete imperative action verbs, and provided an effortless step 1.
+      <strong>Benchmark Summary:</strong> 12 out of 12 tests passed (<strong>100% success rate</strong>). All outputs strictly fulfilled the 3–7 step length constraint, conformed to the dictionary of concrete imperative action verbs, and provided an effortless step 1. In addition, the <em>"Make It Even Smaller"</em> unstick splitter was verified to reliably de-escalate complex steps into two valid micro-actions starting with action verbs.
     </p>
 
     <h2>5. What Is Next (Future Roadmap & Planned Enhancements)</h2>
     <p>While QuietStart currently delivers a complete, validated user experience, several compelling directions exist for future development and research:</p>
     <ul>
       <li><strong>In-Browser WebGPU AI (Zero-Cost Local Intelligence):</strong> Integrate on-device quantized models via Chrome's experimental WebGPU / Gemini Nano APIs or Transformers.js. This will deliver contextual AI breakdowns entirely offline without requiring users to purchase third-party API keys.</li>
-      <li><strong>Multimodal Audio Guidance (Web Speech API):</strong> Allow users struggling with motor fatigue or visual screen overload to speak their task aloud and listen to micro-steps narrated in a calm, soothing voice.</li>
-      <li><strong>Biometric & Behavioral Adaptive Timing:</strong> Instead of a static 5-minute timer, dynamically suggest 2, 5, or 10-minute focus durations based on historical completion pacing and user-reported energy levels.</li>
+      <li><strong>Spoken Micro-Step Narration (Text-to-Speech):</strong> Complement hands-free voice input with soothing spoken narration of the active micro-step to assist auditory learners and reduce visual screen fatigue.</li>
+      <li><strong>Biometric & Behavioral Adaptive Timing:</strong> Instead of a static 5-minute timer, dynamically calibrate 2, 5, or 10-minute focus durations based on historical completion pacing and user-reported energy levels.</li>
       <li><strong>Export to Open Calendar Formats:</strong> Allow gentle export of completed calm sessions to standard iCalendar (<code>.ics</code>) files for optional syncing with university course calendars.</li>
     </ul>
   </div>

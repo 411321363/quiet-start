@@ -18,7 +18,8 @@ const ACTION_VERBS = [
   'Pack', 'Unpack', 'Sort', 'Delete', 'Organize', 'Type', 'Call', 'Ask',
   'Start', 'Add', 'Test', 'Inspect', 'Choose', 'Step', 'Fill', 'Fold',
   'Complete', 'Do', 'Run', 'Work', 'Pull', 'Chop', 'Focus', 'Prepare',
-  'Plan', 'Spend', 'Practice', 'Try', 'Begin', 'Finish', 'Listen', 'Watch'
+  'Plan', 'Spend', 'Practice', 'Try', 'Begin', 'Finish', 'Listen', 'Watch',
+  'Pause', 'Touch', 'Decide', 'Click', 'Breathe', 'Rest'
 ];
 
 /**
@@ -291,6 +292,84 @@ async function generateBreakdown(taskTitle, settings) {
   return { steps: getRuleBasedBreakdown(taskTitle), source: 'rules' };
 }
 
+/**
+ * Splits a single overwhelming micro-step into 2 even smaller sub-actions.
+ * Useful for severe task paralysis / unsticking ("Make it even smaller").
+ * Guaranteed to start with action verbs and reduce cognitive load.
+ * 
+ * @param {string} stepText
+ * @returns {string[]} Array of 2 smaller sub-steps
+ */
+function splitMicroStep(stepText) {
+  if (!stepText || typeof stepText !== 'string') {
+    return [
+      "Sit in a comfortable chair and take one slow breath.",
+      "Look gently at what you need to do without judging yourself."
+    ];
+  }
+  const clean = stepText.trim();
+  
+  // Pattern 1: Compound step containing "and", "then", or comma
+  const andMatch = clean.match(/^([A-Za-z]+)\s+(.+?)\s+(?:and|then)\s+([A-Za-z]+)?\s*(.+)$/i);
+  if (andMatch) {
+    const verb1 = andMatch[1];
+    const part1 = andMatch[2];
+    let verb2 = andMatch[3] || 'Take';
+    const part2 = andMatch[4];
+    
+    const v1 = verb1.charAt(0).toUpperCase() + verb1.slice(1);
+    const v2 = startsWithActionVerb(verb2) 
+      ? verb2.charAt(0).toUpperCase() + verb2.slice(1) 
+      : 'Complete';
+      
+    return [
+      `${v1} ${part1.trim().replace(/[.,;]+$/, '')}.`,
+      `${v2} ${part2.trim().replace(/[.,;]+$/, '')}.`
+    ];
+  }
+
+  // Pattern 2: "Open ... to ..."
+  if (/^open\s+/i.test(clean)) {
+    return [
+      "Open the application window or folder right now.",
+      "Find the exact file or link you need and click it."
+    ];
+  }
+
+  // Pattern 3: Physical cleaning / chores
+  if (/^(pick|put|clean|wash|wipe|fold)\s+/i.test(clean)) {
+    return [
+      "Touch just the first physical item with your hand.",
+      "Place that one single item where it belongs."
+    ];
+  }
+
+  // Pattern 4: Writing / drafting
+  if (/^(write|draft|type|outline|list)\s+/i.test(clean)) {
+    return [
+      "Type or write just 1 single word or bullet point.",
+      "Pause for 5 seconds, knowing you broke through the blank page."
+    ];
+  }
+
+  // Pattern 5: Reading / reviewing
+  if (/^(read|review|inspect|check)\s+/i.test(clean)) {
+    return [
+      "Read just the first 5 words or headline.",
+      "Decide if you want to read another sentence or take a rest."
+    ];
+  }
+
+  // Generic fallback:
+  const words = clean.split(/\s+/);
+  const firstWord = words[0];
+  const rest = words.slice(1).join(' ');
+  return [
+    `Set up your space: prepare to ${firstWord.toLowerCase()} ${rest.replace(/[.,;]+$/, '')}.`,
+    `Spend 60 seconds starting: ${clean}`
+  ];
+}
+
 // Export for Node test runner (if running in Node environment)
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -298,6 +377,7 @@ if (typeof module !== 'undefined' && module.exports) {
     startsWithActionVerb,
     getRuleBasedBreakdown,
     getLLMBreakdown,
-    generateBreakdown
+    generateBreakdown,
+    splitMicroStep
   };
 }

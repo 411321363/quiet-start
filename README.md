@@ -23,36 +23,32 @@ Instead of traditional productivity tools that use red overdue alerts, punishing
 
 ## 3. Key Features
 
-1. **Quick Add (Zero Friction):**
-   - Type a task into the bar and press **Enter**.
+1. **Quick Add & Voice Thought Dump (Zero Friction):**
+   - Type a task into the bar and press **Enter**, or click the **🎙️ microphone button** to speak your thoughts aloud using the browser's native **Web Speech API**.
    - No required categories, priority flags, or due-date pickers. Capture ideas in under two seconds.
-2. **Break It Down (AI + Heuristic Fallback):**
-   - Splits any task into **3 to 7 tiny micro-steps**, each designed to take **2 to 5 minutes**.
-   - Every breakdown begins with an effortless, low-friction first step (e.g., "Open...", "Pick up...", "Find...").
-   - **LLM Integration:** If an API key is entered in Settings (OpenAI-compatible or Google Gemini), the app requests a contextual breakdown from the model. The key is stored **exclusively in the user's browser `localStorage`** and is never hardcoded or transmitted elsewhere.
-   - **Guaranteed Fallback:** If no API key is provided, if network access drops, or if the API call fails, the app instantly switches to an internal rule-based template engine so it **always works reliably**.
-3. **"Just Start" Mode (Single Step Focus):**
-   - Opens a peaceful, distraction-free view showing **ONE step at a time**.
-   - Includes a **5-minute gentle countdown timer** with Start, Pause, and Reset controls.
-   - Features **"Done"** (marks step complete and advances) and **"Skip for now"** (skips without penalty or guilt).
-   - Concludes with a warm, encouraging completion message when all steps are finished.
-4. **Gentle Reminders:**
+2. **Break It Down & "Make It Even Smaller" (De-escalation):**
+   - Splits any task into **3 to 7 tiny micro-steps**, each designed to take **2 to 5 minutes**, guaranteed to start with concrete action verbs.
+   - **🤏 "Make It Even Smaller" Unstick Feature:** If even a 2-minute step feels too hard or overwhelming, click the unstick button to de-escalate it into 2 ultra-tiny 30-second actions (e.g. *"Touch just the first item"* or *"Type 1 single word"*).
+   - **LLM Integration:** If an API key is entered in Settings (OpenAI-compatible or Google Gemini), the app requests a contextual breakdown. The key is stored **exclusively in the browser `localStorage`**.
+   - **Guaranteed Fallback:** Seamless offline symbolic rule engine guarantees 100% reliability if offline or if no API key is supplied.
+3. **"Just Start" Mode with Ambient Focus Audio:**
+   - Opens a peaceful view showing **ONE step at a time** with a **5-minute gentle countdown timer**.
+   - **🎧 Synthesized Focus Sounds:** Toggle between **Brown Noise** (deep warmth for ADHD focus) and **Soft Rain**, mathematically generated on the fly via the browser's **Web Audio API** with zero external audio downloads.
+   - Features **"Done"** and non-judgmental **"Skip for now"**.
+4. **🌙 Calming Day & Night Modes:**
+   - Easily toggle between soft sage/cream daytime aesthetic and a gentle, low-contrast midnight slate theme for late-night study sessions.
+5. **Gentle Reminders:**
    - Lets users schedule reminder times (e.g. `09:30, 14:30, 19:30`).
-   - Uses the browser **Notification API** (with polite in-app fallback).
-   - Messaging is kind, peaceful, and zero-guilt (e.g., *"No rush or pressure. Take a slow breath and see if there is one small thing you feel like doing."*).
-5. **⚡ Sudden Reminders & Anti-Doomscroll Shield:**
-   - Designed specifically for the reality of getting sidetracked by social media and rabbit holes even after starting.
-   - **Tab Drift Detection:** Uses the `Page Visibility API` (`document.visibilitychange`). If the user drifts away from the tab for 3+ minutes, it sends a kind background reality check: *"Did an algorithm grab your attention? No shame—it happens. Tap here to gently return to your 2-minute step."*
-   - **Compassionate Re-Anchoring:** When returning to the tab, users are greeted with a warm, zero-guilt shoulder-drop grounding prompt instead of angry alert sounds.
-   - **Surprise Grounding Checks:** Optional periodic pattern-interrupt nudges (every 8–15 minutes) to break automatic scrolling trances.
-6. **📅 Gentle Calendar & Repeat Days:**
-   - Look back on previous days' quiet accomplishments without pressure.
-   - Days with activity display a quiet sage dot (`🌱`). Rest days are calm and neutral—**never red, never crossed out with "failed" marks**.
-   - **One-Click Replay:** Found a past routine that worked well? Click **"🔁 Repeat This Entire Day"** to clone all tasks and their micro-steps into today's active list with fresh unchecked boxes.
-   - **Cherry-Pick Routine Tasks:** Add individual tasks from any past day into today with one click.
-7. **Quiet Daily Reset:**
-   - Unfinished tasks quietly roll over to the next day.
-   - **No red overdue lists**, no broken-streak warnings, and no shame. Each morning is a fresh, clean slate.
+   - Uses the browser **Notification API** with polite in-app fallback and kind wording.
+6. **⚡ Sudden Reminders & Anti-Doomscroll Shield:**
+   - **Tab Drift Detection:** Uses `document.visibilitychange`. If you drift to social media or other tabs for 3+ minutes, sends a gentle reality check: *"Did an algorithm grab your attention? No shame—it happens. Come back whenever you're ready."*
+   - **Compassionate Re-Anchoring:** Returning plays a calming 528 Hz chime and shows a warm, zero-guilt prompt to drop your shoulders.
+   - **Surprise Grounding Checks:** Optional periodic pattern-interrupt nudges (every 8–15 minutes).
+7. **📅 Gentle Calendar & Repeat Days:**
+   - Review quiet wins with calm sage dots (`🌱`). Rest days are neutral—never red or crossed out.
+   - **One-Click Replay:** Click **"🔁 Repeat This Entire Day"** to clone past routines with fresh, unchecked boxes.
+8. **Quiet Daily Reset:**
+   - Unfinished tasks quietly roll over to the next day with zero red overdue marks and no broken streaks.
 
 ---
 
